@@ -1,0 +1,21 @@
+#To create crea.select, a subset of crea.rep used for feature selection:
+
+load("crea.repvx.rda")
+
+crea.select<-crea.rep[!crea.rep$EstPregnant==1&!crea.rep$RRT==1&!crea.rep$Transplant==1&crea.rep$Prehf==0,] 
+
+#Exclude maternity tests, data from RRT, transplant and pre heart failure patients.
+
+crea.select<-crea.select[,c(x:y,z....)] 
+
+#Use column positions to omit all columns referencing future metrics (*_6M,Dead,Max*) 
+#Also remove unecessary columns now redundant (EstPregnant, RRT, RRTDate,Transplant,EntryDate if event.date is retained)
+
+summary(crea.select)
+#Note which columns should enter clustering as factors not as continuous variables. This includes categorical drugs columns. 
+#Reclassify as a group based on position:
+
+for(i in c(x,y:ncol(crea.select))) {
+    crea.select[,i] <- as.factor(crea.rep[,i]) #Replace x and y with the numeric range of the columns being altered
+    
+    save(crea.select,file="crea.select.rda")
